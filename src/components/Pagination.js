@@ -1,31 +1,54 @@
 import React from 'react';
 
-const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => {
-  // Calculate total pages and ensure it's at least 1
-  const totalPages = itemsPerPage > 0 ? Math.ceil(totalItems / itemsPerPage) : 1;
+function Pagination({ itemsPerPage, totalItems, currentPage, setCurrentPage }) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  // Handle cases where currentPage might be out of range
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      onPageChange(page);
-    }
+  // Function to handle page change
+  const handleClick = (pageNumber) => {
+    const newPage = Math.min(Math.max(1, pageNumber), totalPages);
+    setCurrentPage(newPage);
   };
 
+  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
   return (
-    <div className="flex justify-center mt-4 space-x-2">
-      {[...Array(totalPages)].map((_, index) => (
+    <div className="flex items-center justify-between">
+      <div className="text-gray-500">
+        {`${startItem}-${endItem} of ${totalItems}`}
+      </div>
+      <div className="inline-flex -space-x-px text-sm">
         <button
-          key={index + 1}
-          onClick={() => handlePageChange(index + 1)}
-          className={`px-3 py-1 rounded ${
-            currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'
-          }`}
+          onClick={() => handleClick(1)}
+          disabled={currentPage === 1}
+          className="flex items-center justify-center px-2 h-8 text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
         >
-          {index + 1}
+          ≪
         </button>
-      ))}
+        <button
+          onClick={() => handleClick(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="flex items-center justify-center px-3 h-8 text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+        >
+          &lt;
+        </button>
+        <button
+          onClick={() => handleClick(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="flex items-center justify-center px-3 h-8 text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+        >
+          &gt;
+        </button>
+        <button
+          onClick={() => handleClick(totalPages)}
+          disabled={currentPage === totalPages}
+          className="flex items-center justify-center px-2 h-8 text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+        >
+          ≫
+        </button>
+      </div>
     </div>
   );
-};
+}
 
 export default Pagination;

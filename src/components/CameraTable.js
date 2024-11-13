@@ -28,7 +28,7 @@ const CameraTable = () => {
     };
     fetchData();
   }, []);
-
+console.log(cameras)
   // Search and Filter Functionality
   useEffect(() => {
     const filtered = Array.isArray(cameras) ? cameras.filter(camera =>
